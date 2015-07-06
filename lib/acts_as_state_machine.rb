@@ -163,6 +163,20 @@ module ScottBarron                   #:nodoc:
           end
         end
 
+        # THOMAS: add method to get next possible transitions for current state
+        # return as array of symbols
+        def possible_transitions
+          possible_transitions = []
+          self.class.read_inheritable_attribute(:transition_table).each do |transitions|
+            transitions[1].each do |transition|
+              if transition.from == current_state.to_s
+                possible_transitions << transitions[0]
+              end
+            end
+          end
+          possible_transitions.uniq
+        end
+
         def run_transition_action(action)
           Symbol === action ? self.method(action).call : action.call(self)
         end
